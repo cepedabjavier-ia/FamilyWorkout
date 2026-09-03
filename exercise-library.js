@@ -22,6 +22,17 @@ window.EXERCISE_LIBRARY = [
     ]
   },
   {
+    id: "bench-press-machine",
+    name: "Press banca en máquina",
+    category: "Pecho",
+    gif: "assets/exercises/ChestPress.gif",
+    instructions: [
+      "Retrae las escápulas y mantén los pies firmes en el suelo.",
+      "Las manos debe quedar bajo la zona media del pecho.",
+      "Empuja sin despegar los hombros del asiento y manten los codos cerrados."
+    ]
+  },
+  {
     id: "incline-dumbbell-press",
     name: "Press inclinado con mancuernas",
     category: "Pecho",
@@ -33,25 +44,15 @@ window.EXERCISE_LIBRARY = [
     ]
   },
   {
-    id: "cable-chest-fly",
-    name: "Cable Chest Fly",
+    id: "chest-fly",
+    name: "Chest Fly",
     category: "Pecho",
-    gif: "assets/exercises/cable-chest-fly.gif",
+    gif: "assets/exercises/chest-fly.gif",
     instructions: [
+      "Ajusta el asiento para que los brazos queden alineados en la parte baja del pecho.",
       "Mantén una ligera flexión de codos durante todo el recorrido.",
-      "Junta las manos frente al pecho sin encoger los hombros.",
+      "Junta las manos frente al pecho buscando juntar los codos sin encoger los hombros.",
       "Regresa lentamente hasta sentir un estiramiento cómodo."
-    ]
-  },
-  {
-    id: "pec-deck",
-    name: "Pec Deck / Contractor de pecho",
-    category: "Pecho",
-    gif: "assets/exercises/pec-deck.gif",
-    instructions: [
-      "Ajusta el asiento para que los brazos queden alineados con el pecho.",
-      "Mantén el torso apoyado y junta los brazos de forma controlada.",
-      "Evita adelantar los hombros al cerrar."
     ]
   },
   {
@@ -71,9 +72,9 @@ window.EXERCISE_LIBRARY = [
     id: "lat-pulldown",
     name: "Lat Pulldown",
     category: "Espalda",
-    gif: "assets/exercises/lat-pulldown.gif",
+    gif: "assets/exercises/LatPulldown.gif",
     instructions: [
-      "Mantén el pecho elevado y una ligera inclinación del torso.",
+      "Mantén el pecho elevado, retrae escápulas y una ligera inclinación del torso.",
       "Lleva la barra hacia la parte alta del pecho dirigiendo los codos abajo.",
       "Controla el regreso sin soltar de golpe el peso."
     ]
@@ -245,6 +246,17 @@ window.EXERCISE_LIBRARY = [
       "Mantén tensión constante en el cable.",
       "Flexiona el codo sin mover los hombros hacia delante.",
       "Extiende de forma controlada al finalizar cada repetición."
+    ]
+  },
+  {
+    id: "bicep-hammer-curl",
+    name: "Curl de bíceps extendido",
+    category: "Bíceps",
+    gif: "assets/exercises/Hammercurl.gif",
+    instructions: [
+      "Apoya desde la axila en la almohadilla y no separarla en ningun momento.",
+      "Flexiona el codo sin mover los hombros hacia delante.",
+      "Extiende completamente de forma controlada al finalizar cada repetición."
     ]
   },
 
