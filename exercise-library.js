@@ -311,7 +311,7 @@ window.EXERCISE_LIBRARY = [
     id: "leg-press",
     name: "Prensa de piernas",
     category: "Piernas",
-    gif: "assets/exercises/leg-press.gif",
+    gif: "assets/exercises/Legs/Leg-Press.gif",
     instructions: [
       "Apoya completamente la espalda y la pelvis.",
       "Desciende hasta una profundidad que puedas controlar sin despegar la cadera.",
@@ -333,7 +333,7 @@ window.EXERCISE_LIBRARY = [
     id: "leg-extension",
     name: "Extensión de cuádriceps",
     category: "Piernas",
-    gif: "assets/exercises/leg-extension.gif",
+    gif: "assets/exercises/Legs/Leg-Extension.gif",
     instructions: [
       "Alinea la rodilla con el eje de giro de la máquina.",
       "Extiende las piernas de forma controlada.",
@@ -344,7 +344,7 @@ window.EXERCISE_LIBRARY = [
     id: "seated-leg-curl",
     name: "Curl femoral sentado",
     category: "Piernas",
-    gif: "assets/exercises/seated-leg-curl.gif",
+    gif: "assets/exercises/Legs/LegCurl.gif",
     instructions: [
       "Ajusta la máquina para que la rodilla coincida con el eje de giro.",
       "Flexiona las rodillas manteniendo la cadera estable.",
@@ -377,7 +377,7 @@ window.EXERCISE_LIBRARY = [
     id: "hip-thrust",
     name: "Hip Thrust",
     category: "Piernas",
-    gif: "assets/exercises/hip-thrust.gif",
+    gif: "assets/exercises/Legs/HipThrust.gif",
     instructions: [
       "Apoya la parte alta de la espalda sobre el banco.",
       "Eleva la cadera contrayendo glúteos sin hiperextender la espalda.",
@@ -393,6 +393,27 @@ window.EXERCISE_LIBRARY = [
       "Desciende el talón de forma controlada para lograr un buen estiramiento.",
       "Eleva el talón empujando sobre la parte anterior del pie.",
       "Evita rebotar entre repeticiones."
+    ]
+  },
+  {
+    id: "seating-adductor",
+    name: "Aductores",
+    category: "Piernas",
+    gif: "assets/exercises/Legs/adductor.gif",
+    instructions: [
+      "Apoya la espalda completamente en el asiento.",
+      "Afirma las manillas para mayor estabilidad.",
+      "Contrae y extiende de manera controlada."
+    ]
+  },
+  {
+    id: "seating-abductor",
+    name: "Abductores",
+    category: "Piernas",
+    gif: "assets/exercises/Legs/abductor.gif",
+    instructions: [
+      "Inclina el cuerpo levemente hacia adelante.",
+      "Extiende y contrae de manera controlada."
     ]
   },
 
