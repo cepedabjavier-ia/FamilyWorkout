@@ -157,21 +157,25 @@
         <button class="close-button" type="button" data-close-modal="exercisePickerModal" aria-label="Cerrar">×</button>
       </div>
 
-      <div class="picker-toolbar">
-        <label class="search-box">
-          <span aria-hidden="true">⌕</span>
-          <input id="exerciseSearch" type="search" placeholder="Buscar ejercicio..." autocomplete="off" />
-        </label>
-        <button id="addCustomExerciseBtn" class="secondary-button custom-exercise-button" type="button">+ Ejercicio personalizado</button>
+      <div class="picker-controls">
+        <div class="picker-toolbar">
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="exerciseSearch" type="search" placeholder="Buscar ejercicio..." autocomplete="off" />
+          </label>
+          <button id="addCustomExerciseBtn" class="secondary-button custom-exercise-button" type="button">+ Ejercicio personalizado</button>
+        </div>
+
+        <div id="categoryFilters" class="category-filters" aria-label="Filtrar por grupo muscular"></div>
       </div>
 
-      <div id="categoryFilters" class="category-filters" aria-label="Filtrar por grupo muscular"></div>
+      <div class="picker-results" aria-live="polite">
+        <div id="exerciseLibraryGrid" class="exercise-library-grid"></div>
 
-      <div id="exerciseLibraryGrid" class="exercise-library-grid"></div>
-
-      <div id="libraryEmptyState" class="library-empty" hidden>
-        <strong>No se encontraron ejercicios.</strong>
-        <span>Prueba otra búsqueda o crea un ejercicio personalizado.</span>
+        <div id="libraryEmptyState" class="library-empty" hidden>
+          <strong>No se encontraron ejercicios.</strong>
+          <span>Prueba otra búsqueda o crea un ejercicio personalizado.</span>
+        </div>
       </div>
     </section>
   </div>
