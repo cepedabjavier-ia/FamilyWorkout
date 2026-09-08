@@ -119,3 +119,14 @@ GitHub entregará una URL pública para la aplicación.
 - El asa ☰ permanece visible en la tarjeta cerrada para permitir reordenar ejercicios sin abrirlos.
 - En computador se conserva una tabla horizontal real; no se transforma la tabla en tarjetas mediante CSS.
 - Este cambio es solo de interfaz: no modifica el formato del JSON ni la forma en que se guardan o exportan las rutinas.
+
+## Actualización v4
+
+Esta versión añade cuatro mejoras a la rutina:
+
+- En **Agregar ejercicio**, los ejercicios de biblioteca que ya aparecen en Jueves, Viernes o Sábado se muestran con un fondo verde suave. La detección usa `libraryId`, por lo que sigue funcionando aunque se edite el nombre visible del ejercicio.
+- Cada ejercicio incorpora **Placas**, un botón cíclico `0 → 1 → 2 → 0`.
+- Cada ejercicio incorpora **Subir peso**, un checkbox para recordar intentar un peso mayor la semana siguiente.
+- Al eliminar un ejercicio se solicita confirmación antes de borrarlo.
+
+Los campos `plates` e `increaseWeightNextWeek` forman parte de la base de datos local y del JSON exportado. Al importar configuraciones anteriores, se asigna automáticamente `plates: 0` e `increaseWeightNextWeek: false`.

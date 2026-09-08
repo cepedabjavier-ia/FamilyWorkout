@@ -142,7 +142,7 @@ code {
 }
 
 .app-shell {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1360px, calc(100% - 32px));
   margin: 30px auto 60px;
 }
 
@@ -251,7 +251,7 @@ code {
 .routine-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 850px;
+  min-width: 1120px;
 }
 
 .routine-table th,
@@ -289,11 +289,26 @@ code {
 .routine-table th:nth-child(3),
 .routine-table th:nth-child(4),
 .routine-table th:nth-child(5) {
-  width: 130px;
+  width: 112px;
 }
 
 .routine-table th:nth-child(6) {
-  width: 210px;
+  width: 82px;
+  text-align: center;
+}
+
+.routine-table th:nth-child(7) {
+  width: 102px;
+  text-align: center;
+}
+
+.routine-table th:nth-child(8) {
+  width: 196px;
+}
+
+.plates-cell,
+.increase-weight-cell {
+  text-align: center !important;
 }
 
 .actions-column {
@@ -338,6 +353,90 @@ code {
 .weight-field span {
   color: var(--muted);
   font-size: 0.86rem;
+}
+
+.plates-button {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  min-height: 40px;
+  padding: 0;
+  border: 1px solid #d5deea;
+  border-radius: 11px;
+  background: #f7f9fc;
+  color: #35445a;
+  font-weight: 850;
+  transition: 0.18s ease;
+}
+
+.plates-button:hover,
+.plates-button:focus-visible {
+  border-color: #a9c0ec;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.plates-button[data-plates="1"] {
+  border-color: #b8cff7;
+  background: #f1f6ff;
+  color: #245bb7;
+}
+
+.plates-button[data-plates="2"] {
+  border-color: #9ebcf2;
+  background: #eaf1ff;
+  color: var(--primary);
+}
+
+.increase-weight-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+}
+
+.increase-weight-checkbox {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.increase-weight-box {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  transition: 0.18s ease;
+}
+
+.increase-weight-checkbox:focus-visible + .increase-weight-box {
+  outline: 3px solid rgba(37, 99, 235, 0.2);
+  outline-offset: 3px;
+}
+
+.increase-weight-checkbox:checked + .increase-weight-box {
+  border-color: var(--success);
+  background: var(--success);
+  box-shadow: 0 4px 12px rgba(19, 115, 51, 0.16);
+}
+
+.increase-weight-checkbox:checked + .increase-weight-box::after {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 11px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .view-button,
@@ -846,6 +945,27 @@ body.is-reordering {
   box-shadow: 0 10px 24px rgba(30, 64, 175, 0.08);
 }
 
+.library-exercise-card.is-used {
+  border-color: #b9dfc4;
+  background: #f0faf3;
+  box-shadow: inset 3px 0 0 #55a96b;
+}
+
+.library-exercise-card.is-used:hover {
+  border-color: #8fcda0;
+  background: #e8f7ed;
+  box-shadow: inset 3px 0 0 #3f9457, 0 10px 24px rgba(19, 115, 51, 0.08);
+}
+
+.library-exercise-card.is-used .library-category {
+  color: var(--success);
+}
+
+.library-exercise-card.is-used .library-add-hint {
+  color: #397b4c;
+  font-weight: 750;
+}
+
 .library-category {
   color: var(--primary);
   font-size: 0.7rem;
@@ -1260,6 +1380,58 @@ body.is-reordering {
     margin-bottom: 12px;
   }
 
+  .mobile-progress-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+    gap: 9px;
+    margin-bottom: 12px;
+  }
+
+  .mobile-plates-button {
+    width: 100%;
+    min-height: 43px;
+  }
+
+  .increase-weight-mobile-control {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 43px;
+    padding: 8px 11px;
+    border: 1px solid #d8e0eb;
+    border-radius: 10px;
+    background: #fbfcfe;
+    cursor: pointer;
+  }
+
+  .increase-weight-mobile-control .increase-weight-box {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+  }
+
+  .increase-weight-mobile-control .increase-weight-checkbox:checked + .increase-weight-box::after {
+    left: 6px;
+    top: 2px;
+  }
+
+  .increase-weight-label {
+    min-width: 0;
+    color: #526176;
+    font-size: 0.8rem;
+    font-weight: 750;
+    line-height: 1.2;
+  }
+
+  .mobile-increase-weight-field:has(.increase-weight-checkbox:checked) .increase-weight-mobile-control {
+    border-color: #b9dfc4;
+    background: var(--success-soft);
+  }
+
+  .mobile-increase-weight-field:has(.increase-weight-checkbox:checked) .increase-weight-label {
+    color: var(--success);
+  }
+
   .mobile-exercise-card .field {
     min-width: 0;
     min-height: 43px;
@@ -1441,6 +1613,11 @@ body.is-reordering {
   }
 
   .mobile-stats-grid {
+    gap: 6px;
+  }
+
+  .mobile-progress-grid {
+    grid-template-columns: 0.68fr 1.32fr;
     gap: 6px;
   }
 

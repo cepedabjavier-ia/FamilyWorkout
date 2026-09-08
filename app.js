@@ -1,5 +1,5 @@
 const STORAGE_KEY = "gymRoutineDb_v1";
-const CURRENT_DB_VERSION = 3;
+const CURRENT_DB_VERSION = 4;
 
 const EXERCISE_LIBRARY = Array.isArray(window.EXERCISE_LIBRARY) ? window.EXERCISE_LIBRARY : [];
 const EXERCISE_BY_ID = new Map(EXERCISE_LIBRARY.map(exercise => [exercise.id, exercise]));
@@ -105,6 +105,13 @@ function sanitizeRestSeconds(value, fallback = 90) {
   return Math.min(3600, Math.max(5, Math.round(numericValue)));
 }
 
+function sanitizePlates(value) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) return 0;
+  const rounded = Math.round(numericValue);
+  return rounded >= 0 && rounded <= 2 ? rounded : 0;
+}
+
 function normalizeExercise(exercise, defaultRestSeconds = 90) {
   return {
     id: typeof exercise?.id === "string" && exercise.id ? exercise.id : generateId(),
@@ -113,6 +120,8 @@ function normalizeExercise(exercise, defaultRestSeconds = 90) {
     sets: exercise?.sets ?? "",
     reps: exercise?.reps ?? "",
     weight: exercise?.weight ?? "",
+    plates: sanitizePlates(exercise?.plates),
+    increaseWeightNextWeek: Boolean(exercise?.increaseWeightNextWeek),
     restSeconds: sanitizeRestSeconds(exercise?.restSeconds, defaultRestSeconds)
   };
 }
@@ -146,6 +155,8 @@ function createExerciseFromLibrary(libraryExercise) {
     sets: "",
     reps: "",
     weight: "",
+    plates: 0,
+    increaseWeightNextWeek: false,
     restSeconds: getDefaultRestSeconds()
   };
 }
@@ -158,6 +169,8 @@ function createCustomExercise() {
     sets: "",
     reps: "",
     weight: "",
+    plates: 0,
+    increaseWeightNextWeek: false,
     restSeconds: getDefaultRestSeconds()
   };
 }
@@ -195,6 +208,13 @@ function getExerciseById(exerciseId, day = activeDay) {
 }
 
 function deleteExercise(exerciseId) {
+  const exercise = getExerciseById(exerciseId);
+  if (!exercise) return;
+
+  const exerciseName = String(exercise.name ?? "").trim() || "este ejercicio";
+  const confirmed = window.confirm(`¿Seguro que quieres eliminar “${exerciseName}” de ${DAY_LABELS[activeDay]}?`);
+  if (!confirmed) return;
+
   clearTimer(exerciseId);
   if (expandedExerciseByDay[activeDay] === exerciseId) {
     expandedExerciseByDay[activeDay] = null;
@@ -266,6 +286,8 @@ function bindExerciseControls(container, exercise, mode) {
   const weightInput = container.querySelector(".exercise-weight");
   const restInput = container.querySelector(".exercise-rest");
   const timerButton = container.querySelector(".timer-button");
+  const platesButton = container.querySelector(".plates-button");
+  const increaseWeightCheckbox = container.querySelector(".increase-weight-checkbox");
   const viewButton = container.querySelector(".view-button");
   const dragHandle = container.querySelector(".drag-handle");
   const deleteButton = container.querySelector(".delete-button");
@@ -277,6 +299,8 @@ function bindExerciseControls(container, exercise, mode) {
   restInput.value = sanitizeRestSeconds(exercise.restSeconds, getDefaultRestSeconds());
   timerButton.dataset.defaultSeconds = String(restInput.value);
   syncTimerButtonState(exercise.id, timerButton);
+  paintPlatesButton(platesButton, sanitizePlates(exercise.plates));
+  increaseWeightCheckbox.checked = Boolean(exercise.increaseWeightNextWeek);
 
   bindInput(nameInput, exercise.id, "name", "exercise-name", value => {
     syncMobileExerciseTitle(exercise.id, value);
@@ -285,6 +309,8 @@ function bindExerciseControls(container, exercise, mode) {
   bindInput(repsInput, exercise.id, "reps", "exercise-reps");
   bindInput(weightInput, exercise.id, "weight", "exercise-weight");
   bindRestInput(restInput, timerButton, exercise.id);
+  bindPlatesButton(platesButton, exercise.id);
+  bindIncreaseWeightCheckbox(increaseWeightCheckbox, exercise.id);
 
   const isLibraryLinked = Boolean(exercise.libraryId && EXERCISE_BY_ID.has(exercise.libraryId));
   viewButton.classList.toggle("is-custom", !isLibraryLinked);
@@ -360,6 +386,49 @@ function bindRestInput(input, timerButton, exerciseId) {
   input.addEventListener("change", commit);
   input.addEventListener("blur", commit);
 }
+
+function paintPlatesButton(button, value) {
+  if (!button) return;
+  const plates = sanitizePlates(value);
+  button.textContent = String(plates);
+  button.dataset.plates = String(plates);
+  button.setAttribute("aria-label", `Cantidad de placas: ${plates}`);
+}
+
+function syncPlatesButtons(exerciseId, value) {
+  getExerciseDomInstances(exerciseId).forEach(instance => {
+    paintPlatesButton(instance.querySelector(".plates-button"), value);
+  });
+}
+
+function bindPlatesButton(button, exerciseId) {
+  if (!button) return;
+  button.addEventListener("click", () => {
+    const exercise = getExerciseById(exerciseId);
+    if (!exercise) return;
+    const nextValue = (sanitizePlates(exercise.plates) + 1) % 3;
+    exercise.plates = nextValue;
+    saveDatabase();
+    syncPlatesButtons(exerciseId, nextValue);
+  });
+}
+
+function syncIncreaseWeightCheckboxes(exerciseId, checked, source = null) {
+  getExerciseDomInstances(exerciseId).forEach(instance => {
+    const checkbox = instance.querySelector(".increase-weight-checkbox");
+    if (checkbox && checkbox !== source) checkbox.checked = checked;
+  });
+}
+
+function bindIncreaseWeightCheckbox(checkbox, exerciseId) {
+  if (!checkbox) return;
+  checkbox.addEventListener("change", event => {
+    const checked = Boolean(event.target.checked);
+    updateExercise(exerciseId, "increaseWeightNextWeek", checked);
+    syncIncreaseWeightCheckboxes(exerciseId, checked, event.target);
+  });
+}
+
 
 /* REORDENAMIENTO */
 function setupDragHandle(handle, sourceElement, exerciseId, mode) {
@@ -459,7 +528,7 @@ function createDragPlaceholder(mode, height) {
     const placeholder = document.createElement("tr");
     placeholder.className = "drag-placeholder desktop-drag-placeholder";
     const cell = document.createElement("td");
-    cell.colSpan = 7;
+    cell.colSpan = 9;
     const inner = document.createElement("div");
     inner.className = "drag-placeholder-inner";
     inner.style.minHeight = `${Math.max(54, Math.round(height))}px`;
@@ -774,8 +843,18 @@ function renderCategoryFilters() {
   });
 }
 
+function getUsedLibraryIds() {
+  return new Set(
+    Object.values(database.days)
+      .flat()
+      .map(exercise => exercise.libraryId)
+      .filter(Boolean)
+  );
+}
+
 function renderExerciseLibrary() {
   const searchTerm = normalizeText(exerciseSearch.value.trim());
+  const usedLibraryIds = getUsedLibraryIds();
 
   const matches = EXERCISE_LIBRARY.filter(exercise => {
     const matchesCategory = activeLibraryCategory === "Todos" || exercise.category === activeLibraryCategory;
@@ -791,6 +870,8 @@ function renderExerciseLibrary() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "library-exercise-card";
+    const isUsed = usedLibraryIds.has(exercise.id);
+    button.classList.toggle("is-used", isUsed);
 
     const category = document.createElement("span");
     category.className = "library-category";
@@ -801,7 +882,7 @@ function renderExerciseLibrary() {
 
     const hint = document.createElement("span");
     hint.className = "library-add-hint";
-    hint.textContent = "+ Agregar a la rutina";
+    hint.textContent = isUsed ? "✓ Ya está en tu rutina · Agregar otra vez" : "+ Agregar a la rutina";
 
     button.append(category, name, hint);
     button.addEventListener("click", () => addLibraryExercise(exercise.id));

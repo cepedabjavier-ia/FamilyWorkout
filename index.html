@@ -50,6 +50,8 @@
                 <th>Series</th>
                 <th>Repeticiones</th>
                 <th>Peso</th>
+                <th>Placas</th>
+                <th>Subir peso</th>
                 <th>Descanso</th>
                 <th class="actions-column" aria-label="Acciones"></th>
               </tr>
@@ -237,6 +239,15 @@
           <span>kg</span>
         </div>
       </td>
+      <td class="plates-cell">
+        <button class="plates-button" type="button" aria-label="Cantidad de placas: 0" title="Presiona para cambiar entre 0, 1 y 2 placas">0</button>
+      </td>
+      <td class="increase-weight-cell">
+        <label class="increase-weight-toggle" title="Recordar subir el peso la próxima semana">
+          <input class="increase-weight-checkbox" type="checkbox" aria-label="Subir peso la próxima semana" />
+          <span class="increase-weight-box" aria-hidden="true"></span>
+        </label>
+      </td>
       <td>
         <div class="rest-control">
           <div class="rest-duration-field">
@@ -284,6 +295,22 @@
               <input class="field compact-field exercise-weight" type="number" min="0" step="0.5" inputmode="decimal" placeholder="0" />
               <span class="unit-label">kg</span>
             </div>
+          </label>
+        </div>
+
+        <div class="mobile-progress-grid">
+          <div class="mobile-form-field">
+            <span>Placas</span>
+            <button class="plates-button mobile-plates-button" type="button" aria-label="Cantidad de placas: 0" title="Presiona para cambiar entre 0, 1 y 2 placas">0</button>
+          </div>
+
+          <label class="mobile-form-field mobile-increase-weight-field">
+            <span>Próxima semana</span>
+            <span class="increase-weight-mobile-control">
+              <input class="increase-weight-checkbox" type="checkbox" />
+              <span class="increase-weight-box" aria-hidden="true"></span>
+              <span class="increase-weight-label">Subir peso</span>
+            </span>
           </label>
         </div>
 
