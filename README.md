@@ -130,3 +130,10 @@ Esta versión añade cuatro mejoras a la rutina:
 - Al eliminar un ejercicio se solicita confirmación antes de borrarlo.
 
 Los campos `plates` e `increaseWeightNextWeek` forman parte de la base de datos local y del JSON exportado. Al importar configuraciones anteriores, se asigna automáticamente `plates: 0` e `increaseWeightNextWeek: false`.
+
+
+## Versión 5.1.0 — corrección de pestaña Personalizado
+
+Esta versión añade versionado explícito a los recursos estáticos (`styles.css`, `exercise-library.js` y `app.js`) mediante parámetros de versión en `index.html`. Esto evita que GitHub Pages o el navegador mezclen un HTML nuevo con JavaScript/CSS de una versión anterior almacenados en caché.
+
+La clave de `localStorage` permanece sin cambios (`gymRoutineDb_v1`), por lo que las rutinas existentes no se pierden. La estructura de drag & drop no fue modificada en esta corrección.

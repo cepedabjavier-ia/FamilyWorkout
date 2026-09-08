@@ -1,5 +1,7 @@
 const STORAGE_KEY = "gymRoutineDb_v1";
 const CURRENT_DB_VERSION = 5;
+const APP_BUILD = "5.1.0";
+window.GYM_ROUTINE_APP_BUILD = APP_BUILD;
 
 const EXERCISE_LIBRARY = Array.isArray(window.EXERCISE_LIBRARY) ? window.EXERCISE_LIBRARY : [];
 const EXERCISE_BY_ID = new Map(EXERCISE_LIBRARY.map(exercise => [exercise.id, exercise]));
