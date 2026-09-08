@@ -1,5 +1,5 @@
 const STORAGE_KEY = "gymRoutineDb_v1";
-const CURRENT_DB_VERSION = 4;
+const CURRENT_DB_VERSION = 5;
 
 const EXERCISE_LIBRARY = Array.isArray(window.EXERCISE_LIBRARY) ? window.EXERCISE_LIBRARY : [];
 const EXERCISE_BY_ID = new Map(EXERCISE_LIBRARY.map(exercise => [exercise.id, exercise]));
@@ -13,14 +13,16 @@ const DEFAULT_DATA = {
   days: {
     jueves: [],
     viernes: [],
-    sabado: []
+    sabado: [],
+    personalizado: []
   }
 };
 
 const DAY_LABELS = {
   jueves: "Jueves",
   viernes: "Viernes",
-  sabado: "Sábado"
+  sabado: "Sábado",
+  personalizado: "Personalizado"
 };
 
 let database = loadDatabase();
@@ -31,7 +33,8 @@ let activeReorder = null;
 const expandedExerciseByDay = {
   jueves: null,
   viernes: null,
-  sabado: null
+  sabado: null,
+  personalizado: null
 };
 
 const routineBody = document.getElementById("routineBody");
@@ -94,7 +97,9 @@ function normalizeDatabase(data) {
     days: {
       jueves: data.days.jueves.map(exercise => normalizeExercise(exercise, defaultRestSeconds)),
       viernes: data.days.viernes.map(exercise => normalizeExercise(exercise, defaultRestSeconds)),
-      sabado: data.days.sabado.map(exercise => normalizeExercise(exercise, defaultRestSeconds))
+      sabado: data.days.sabado.map(exercise => normalizeExercise(exercise, defaultRestSeconds)),
+      personalizado: (Array.isArray(data.days.personalizado) ? data.days.personalizado : [])
+        .map(exercise => normalizeExercise(exercise, defaultRestSeconds))
     }
   };
 }
@@ -139,7 +144,8 @@ function isValidDatabase(data) {
     data.days &&
     Array.isArray(data.days.jueves) &&
     Array.isArray(data.days.viernes) &&
-    Array.isArray(data.days.sabado)
+    Array.isArray(data.days.sabado) &&
+    (data.days.personalizado === undefined || Array.isArray(data.days.personalizado))
   );
 }
 

@@ -1,12 +1,12 @@
 # Mi Rutina de Gimnasio — GitHub Pages
 
-Aplicación web estática para organizar una rutina de gimnasio de **Jueves, Viernes y Sábado**.
+Aplicación web estática para organizar una rutina de gimnasio de **Jueves, Viernes, Sábado y Personalizado**.
 
 No requiere servidor, Node.js ni base de datos externa. Los datos del usuario se guardan en `localStorage` y pueden exportarse/importarse mediante JSON.
 
 ## Funciones
 
-- Pestañas independientes para Jueves, Viernes y Sábado.
+- Pestañas independientes para Jueves, Viernes, Sábado y Personalizado.
 - Columnas: Ver, Nombre, Series, Repeticiones, Peso y Descanso.
 - Descanso configurable por ejercicio, con 90 segundos como valor predeterminado.
 - Biblioteca de ejercicios con buscador y filtros por grupo muscular.
@@ -124,7 +124,7 @@ GitHub entregará una URL pública para la aplicación.
 
 Esta versión añade cuatro mejoras a la rutina:
 
-- En **Agregar ejercicio**, los ejercicios de biblioteca que ya aparecen en Jueves, Viernes o Sábado se muestran con un fondo verde suave. La detección usa `libraryId`, por lo que sigue funcionando aunque se edite el nombre visible del ejercicio.
+- En **Agregar ejercicio**, los ejercicios de biblioteca que ya aparecen en Jueves, Viernes, Sábado o Personalizado se muestran con un fondo verde suave. La detección usa `libraryId`, por lo que sigue funcionando aunque se edite el nombre visible del ejercicio.
 - Cada ejercicio incorpora **Placas**, un botón cíclico `0 → 1 → 2 → 0`.
 - Cada ejercicio incorpora **Subir peso**, un checkbox para recordar intentar un peso mayor la semana siguiente.
 - Al eliminar un ejercicio se solicita confirmación antes de borrarlo.

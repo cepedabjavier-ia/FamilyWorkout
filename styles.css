@@ -208,7 +208,7 @@ code {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   margin: 22px 0 12px;
   padding: 6px;
@@ -1233,6 +1233,7 @@ body.is-reordering {
   }
 
   .tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     margin-top: 14px;
     margin-bottom: 12px;
   }
