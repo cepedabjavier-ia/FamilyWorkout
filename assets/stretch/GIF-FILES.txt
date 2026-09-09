@@ -1,0 +1,12 @@
+doorway-chest-stretch.gif
+floor-chest-stretch.gif
+lat-prayer-stretch.gif
+child-pose-lat-stretch.gif
+cross-body-shoulder-stretch.gif
+overhead-triceps-stretch.gif
+biceps-wall-stretch.gif
+standing-quad-stretch.gif
+hamstring-stretch.gif
+figure-four-glute-stretch.gif
+kneeling-hip-flexor-stretch.gif
+wall-calf-stretch.gif

@@ -4,17 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#101827" />
-  <title>Mi Rutina de Gimnasio</title>
-  <link rel="stylesheet" href="styles.css?v=5.1.0" />
+  <title>Mi Rutina</title>
+  <link rel="stylesheet" href="styles.css?v=7.0.0" />
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
+    <div class="app-brand-row">
       <div class="brand-mark" aria-hidden="true">G</div>
-      <div>
-        <h1>Mi Rutina</h1>
-        <p>Jueves · Viernes · Sábado · Personalizado</p>
-      </div>
+      <nav class="app-section-tabs" aria-label="Secciones de la aplicación">
+        <button class="app-section-tab is-active" type="button" data-section="routine">Mi Rutina</button>
+        <button class="app-section-tab" type="button" data-section="warmup">Calentamiento</button>
+        <button class="app-section-tab" type="button" data-section="stretch">Elongación</button>
+      </nav>
     </div>
 
     <button id="settingsBtn" class="icon-button" type="button" aria-label="Abrir configuración" title="Configuración">
@@ -23,7 +24,7 @@
     </button>
   </header>
 
-  <main class="app-shell">
+  <main id="routineView" class="app-shell app-view">
     <section class="summary-card" aria-label="Resumen de la rutina">
       <div>
         <span class="eyebrow">ENTRENAMIENTO</span>
@@ -73,6 +74,67 @@
     </section>
   </main>
 
+  <main id="warmupView" class="app-shell app-view" hidden>
+    <section class="summary-card recovery-summary-card" aria-label="Calentamiento">
+      <div>
+        <span class="eyebrow">PREPARACIÓN</span>
+        <h2>Calentamiento</h2>
+        <p>Organiza una secuencia breve antes del entrenamiento según el tipo de sesión.</p>
+      </div>
+    </section>
+
+    <section class="recovery-layout" aria-label="Rutinas de calentamiento">
+      <article class="recovery-accordion" data-recovery-kind="warmup" data-recovery-group="upper">
+        <button class="recovery-accordion-toggle" type="button" aria-expanded="false">
+          <span>
+            <strong>Tren Superior</strong>
+            <small id="warmupUpperCount">0 ejercicios</small>
+          </span>
+          <span class="recovery-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="recovery-accordion-body">
+          <div class="recovery-section-toolbar">
+            <p>Movilidad y activación para pecho, espalda, hombros y brazos.</p>
+            <button class="secondary-button recovery-add-button" type="button" data-add-recovery="warmup" data-group="upper">+ Añadir calentamiento</button>
+          </div>
+          <div id="warmupUpperList" class="recovery-item-list"></div>
+          <div id="warmupUpperEmpty" class="recovery-empty">Aún no hay ejercicios de calentamiento para tren superior.</div>
+        </div>
+      </article>
+
+      <article class="recovery-accordion" data-recovery-kind="warmup" data-recovery-group="lower">
+        <button class="recovery-accordion-toggle" type="button" aria-expanded="false">
+          <span>
+            <strong>Tren Inferior</strong>
+            <small id="warmupLowerCount">0 ejercicios</small>
+          </span>
+          <span class="recovery-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="recovery-accordion-body">
+          <div class="recovery-section-toolbar">
+            <p>Movilidad y activación para cadera, rodillas, tobillos y piernas.</p>
+            <button class="secondary-button recovery-add-button" type="button" data-add-recovery="warmup" data-group="lower">+ Añadir calentamiento</button>
+          </div>
+          <div id="warmupLowerList" class="recovery-item-list"></div>
+          <div id="warmupLowerEmpty" class="recovery-empty">Aún no hay ejercicios de calentamiento para tren inferior.</div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <main id="stretchView" class="app-shell app-view" hidden>
+    <section class="summary-card recovery-summary-card" aria-label="Elongación">
+      <div>
+        <span class="eyebrow">MOVILIDAD</span>
+        <h2>Elongación</h2>
+        <p>Organiza elongaciones y movilidad en secciones. Puedes conservar los grupos musculares o crear tus propias categorías.</p>
+      </div>
+      <button id="addStretchSectionBtn" class="primary-button" type="button">+ Nueva sección</button>
+    </section>
+
+    <section id="stretchGroupsContainer" class="recovery-layout stretch-groups-layout" aria-label="Secciones de elongación y movilidad"></section>
+  </main>
+
   <!-- CONFIGURACIÓN -->
   <div id="settingsModal" class="modal" hidden>
     <div class="modal-backdrop" data-close-modal="settingsModal"></div>
@@ -88,7 +150,7 @@
       <div class="settings-section">
         <h3>Base de datos local</h3>
         <p>
-          Tu rutina se guarda automáticamente en este navegador mediante <strong>localStorage</strong>.
+          Tu configuración se guarda automáticamente en este navegador mediante <strong>localStorage</strong>.
           Los GIFs e instrucciones pertenecen a la biblioteca de la aplicación y no se duplican dentro del archivo de respaldo.
         </p>
       </div>
@@ -111,7 +173,7 @@
           <span class="settings-action-icon" aria-hidden="true">⇩</span>
           <span>
             <strong>Exportar configuración</strong>
-            <small>Descarga tu rutina completa en formato JSON.</small>
+            <small>Descarga rutina, calentamientos y elongaciones en un solo JSON.</small>
           </span>
         </button>
 
@@ -127,10 +189,11 @@
 
       <div class="settings-section info-zone">
         <div>
-          <h3>Biblioteca de ejercicios</h3>
+          <h3>Bibliotecas y recursos</h3>
           <p>
-            Los ejercicios, GIFs e instrucciones se administran desde <code>exercise-library.js</code>.
-            Los GIFs deben guardarse dentro de <code>assets/exercises/</code>.
+            La rutina usa <code>exercise-library.js</code> y <code>assets/exercises/</code>.
+            Calentamiento usa <code>warmup-library.js</code> y <code>assets/warmup/</code>; Elongación usa
+            <code>stretch-library.js</code> y <code>assets/stretch/</code>.
           </p>
         </div>
       </div>
@@ -138,9 +201,9 @@
       <div class="settings-section danger-zone">
         <div>
           <h3>Restablecer datos</h3>
-          <p>Elimina todos los ejercicios guardados en este navegador.</p>
+          <p>Elimina la rutina, los calentamientos y las elongaciones guardadas en este navegador.</p>
         </div>
-        <button id="resetBtn" class="danger-button" type="button">Borrar rutina</button>
+        <button id="resetBtn" class="danger-button" type="button">Borrar todos los datos</button>
       </div>
 
       <p id="settingsMessage" class="settings-message" role="status" aria-live="polite"></p>
@@ -180,6 +243,106 @@
           <span>Prueba otra búsqueda o crea un ejercicio personalizado.</span>
         </div>
       </div>
+    </section>
+  </div>
+
+  <!-- SELECTOR CALENTAMIENTO / ELONGACIÓN -->
+  <div id="recoveryPickerModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-modal="recoveryPickerModal"></div>
+    <section class="modal-card modal-card-wide picker-card" role="dialog" aria-modal="true" aria-labelledby="recoveryPickerTitle">
+      <div class="modal-header">
+        <div>
+          <span id="recoveryPickerEyebrow" class="eyebrow">BIBLIOTECA</span>
+          <h2 id="recoveryPickerTitle">Añadir</h2>
+          <p id="recoveryPickerSubtitle" class="modal-subtitle"></p>
+        </div>
+        <button class="close-button" type="button" data-close-modal="recoveryPickerModal" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="picker-controls recovery-picker-controls">
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="recoverySearch" type="search" placeholder="Buscar..." autocomplete="off" />
+        </label>
+        <button id="addCustomStretchBtn" class="secondary-button custom-recovery-button" type="button" hidden>+ Movimiento personalizado</button>
+      </div>
+
+      <div class="picker-results" aria-live="polite">
+        <div id="recoveryLibraryGrid" class="exercise-library-grid recovery-library-grid"></div>
+        <div id="recoveryLibraryEmpty" class="library-empty" hidden>
+          <strong>No se encontraron opciones.</strong>
+          <span>Prueba otra búsqueda.</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- NUEVA SECCIÓN DE ELONGACIÓN -->
+  <div id="stretchSectionModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-modal="stretchSectionModal"></div>
+    <section class="modal-card compact-modal-card" role="dialog" aria-modal="true" aria-labelledby="stretchSectionTitle">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">ELONGACIÓN</span>
+          <h2 id="stretchSectionTitle">Nueva sección</h2>
+          <p class="modal-subtitle">Crea una categoría libre, por ejemplo Movilidad de cadera o Movilidad de hombro.</p>
+        </div>
+        <button class="close-button" type="button" data-close-modal="stretchSectionModal" aria-label="Cerrar">×</button>
+      </div>
+      <form id="stretchSectionForm" class="simple-form">
+        <label class="simple-form-field">
+          <span>Nombre de la sección</span>
+          <input id="stretchSectionName" class="field" type="text" maxlength="60" autocomplete="off" placeholder="Ej. Movilidad de cadera" required />
+        </label>
+        <p id="stretchSectionMessage" class="form-message" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="secondary-button" type="button" data-close-modal="stretchSectionModal">Cancelar</button>
+          <button class="primary-button" type="submit">Crear sección</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- MOVIMIENTO / ELONGACIÓN PERSONALIZADA -->
+  <div id="customStretchModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-modal="customStretchModal"></div>
+    <section class="modal-card compact-modal-card" role="dialog" aria-modal="true" aria-labelledby="customStretchTitle">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">MOVIMIENTO PERSONALIZADO</span>
+          <h2 id="customStretchTitle">Añadir a la sección</h2>
+          <p id="customStretchSubtitle" class="modal-subtitle"></p>
+        </div>
+        <button class="close-button" type="button" data-close-modal="customStretchModal" aria-label="Cerrar">×</button>
+      </div>
+      <form id="customStretchForm" class="simple-form">
+        <label class="simple-form-field">
+          <span>Nombre</span>
+          <input id="customStretchName" class="field" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Movilidad articular de cadera" required />
+        </label>
+        <div class="custom-dose-grid">
+          <label class="simple-form-field">
+            <span>Medida</span>
+            <select id="customStretchDoseType" class="field">
+              <option value="time">Tiempo</option>
+              <option value="reps">Repeticiones</option>
+            </select>
+          </label>
+          <label class="simple-form-field">
+            <span>Cantidad</span>
+            <div class="custom-dose-value-wrap">
+              <input id="customStretchDose" class="field" type="number" min="1" max="3600" step="1" inputmode="numeric" value="30" required />
+              <span id="customStretchDoseUnit">s</span>
+            </div>
+          </label>
+        </div>
+        <p class="form-note">Los movimientos personalizados se guardan en tu JSON. Como no pertenecen a <code>stretch-library.js</code>, el botón Ver indicará que no hay GIF asociado.</p>
+        <p id="customStretchMessage" class="form-message" aria-live="polite"></p>
+        <div class="form-actions">
+          <button class="secondary-button" type="button" data-close-modal="customStretchModal">Cancelar</button>
+          <button class="primary-button" type="submit">Añadir movimiento</button>
+        </div>
+      </form>
     </section>
   </div>
 
@@ -334,7 +497,9 @@
     </article>
   </template>
 
-  <script src="exercise-library.js?v=5.1.0"></script>
-  <script src="app.js?v=5.1.0"></script>
+  <script src="exercise-library.js?v=7.0.0"></script>
+  <script src="warmup-library.js?v=7.0.0"></script>
+  <script src="stretch-library.js?v=7.0.0"></script>
+  <script src="app.js?v=7.0.0"></script>
 </body>
 </html>

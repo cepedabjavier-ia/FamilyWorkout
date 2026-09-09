@@ -1,139 +1,125 @@
-# Mi Rutina de Gimnasio — GitHub Pages
+# Mi Rutina — GitHub Pages (v7.0)
 
-Aplicación web estática para organizar una rutina de gimnasio de **Jueves, Viernes, Sábado y Personalizado**.
+Aplicación web estática para administrar rutina de gimnasio, calentamientos y elongación/movilidad. No requiere backend: los datos se guardan en `localStorage` y pueden exportarse/importarse como JSON.
 
-No requiere servidor, Node.js ni base de datos externa. Los datos del usuario se guardan en `localStorage` y pueden exportarse/importarse mediante JSON.
+## Navegación principal
 
-## Funciones
+- **Mi Rutina**: Jueves, Viernes, Sábado y Personalizado.
+- **Calentamiento**: acordeones de Tren Superior y Tren Inferior.
+- **Elongación**: secciones dinámicas. Incluye grupos musculares predeterminados y permite crear categorías personalizadas ilimitadas.
 
-- Pestañas independientes para Jueves, Viernes, Sábado y Personalizado.
-- Columnas: Ver, Nombre, Series, Repeticiones, Peso y Descanso.
-- Descanso configurable por ejercicio, con 90 segundos como valor predeterminado.
-- Biblioteca de ejercicios con buscador y filtros por grupo muscular.
-- Posibilidad de crear ejercicios personalizados.
-- Botón **Ver** con popup de GIF + instrucciones breves.
-- Detección automática de GIF faltante y visualización de la ruta esperada.
-- Exportación e importación de la rutina mediante JSON.
-- Compatibilidad con configuraciones antiguas de la versión inicial.
-- Diseño responsive con dos vistas independientes: tabla completa en computador y tarjetas desplegables tipo acordeón en celular.
+## Bibliotecas y assets
 
-## Estructura
+- Rutina: `exercise-library.js` → `assets/exercises/`
+- Calentamiento: `warmup-library.js` → `assets/warmup/`
+- Elongación: `stretch-library.js` → `assets/stretch/`
 
-```text
-gym-routine-github/
-├── index.html
-├── styles.css
-├── exercise-library.js
-├── app.js
-├── README.md
-└── assets/
-    └── exercises/
-        ├── README.md
-        ├── bench-press.gif
-        ├── cable-chest-fly.gif
-        └── ...
-```
+Los movimientos que pertenecen a una biblioteca conservan su GIF e instrucciones mediante `libraryId`. Los movimientos personalizados se almacenan íntegramente en el JSON y no necesitan un archivo GIF.
 
-## Cómo cargar los GIFs
+## Calentamiento
 
-Los nombres y rutas están definidos en `exercise-library.js`.
+Cada ejercicio de `warmup-library.js` define `id`, `name`, `region`, `doseType`, `defaultDose`, `gif` e `instructions`. La interfaz muestra nombre, repeticiones/tiempo y botón **Ver**. Los calentamientos ya utilizados se marcan en verde suave dentro del selector.
 
-Por ejemplo:
+## Elongación y movilidad
 
-```javascript
+### Secciones predeterminadas
+
+Los grupos presentes en `stretch-library.js` generan secciones protegidas, por ejemplo Pecho, Espalda, Hombros o Cuádriceps. Estas secciones no se pueden borrar accidentalmente.
+
+### Secciones personalizadas
+
+El botón **+ Nueva sección** permite crear tantas secciones como se necesiten, por ejemplo:
+
+- Movilidad de cadera
+- Movilidad de hombro
+- Movilidad general
+- Pre-sentadilla
+- Recuperación
+
+Las secciones personalizadas muestran **Eliminar sección**. Al eliminar una sección que contiene movimientos, la aplicación pide confirmación e informa que también se eliminará su contenido.
+
+Dentro de una sección personalizada, **+ Añadir movimiento** muestra toda la biblioteca de `stretch-library.js`, sin restringir por grupo muscular. Los elementos de biblioteca ya utilizados en cualquier sección aparecen marcados en verde suave.
+
+### Movimiento personalizado
+
+Desde el selector de Elongación puede elegirse **+ Movimiento personalizado**. Se configura:
+
+- Nombre
+- Medida: Tiempo o Repeticiones
+- Cantidad
+
+Un movimiento personalizado no tiene `libraryId`, por lo que el botón **Ver** informa que no existe GIF asociado. Su nombre y dosis sí se guardan en `localStorage` y en las exportaciones JSON.
+
+## Base de datos v7
+
+Elongación cambia de un objeto fijo por grupos a un arreglo ordenado de secciones:
+
+```json
 {
-  id: "cable-chest-fly",
-  name: "Cable Chest Fly",
-  category: "Pecho",
-  gif: "assets/exercises/cable-chest-fly.gif",
-  instructions: [
-    "Mantén una ligera flexión de codos durante todo el recorrido.",
-    "Junta las manos frente al pecho sin encoger los hombros.",
-    "Regresa lentamente hasta sentir un estiramiento cómodo."
+  "version": 7,
+  "days": {
+    "jueves": [],
+    "viernes": [],
+    "sabado": [],
+    "personalizado": []
+  },
+  "warmups": {
+    "upper": [],
+    "lower": []
+  },
+  "stretchSections": [
+    {
+      "id": "pecho",
+      "name": "Pecho",
+      "builtIn": true,
+      "libraryGroupKey": "pecho",
+      "items": []
+    },
+    {
+      "id": "...",
+      "name": "Movilidad de cadera",
+      "builtIn": false,
+      "libraryGroupKey": null,
+      "items": [
+        {
+          "id": "...",
+          "libraryId": null,
+          "name": "Hip CARs",
+          "doseType": "reps",
+          "dose": 5
+        }
+      ]
+    }
   ]
 }
 ```
 
-Para ese ejercicio debes subir el archivo:
+## Migración desde v6
 
-```text
-assets/exercises/cable-chest-fly.gif
+Los archivos v6 que utilizan:
+
+```json
+"stretches": {
+  "pecho": [],
+  "espalda": []
+}
 ```
 
-Si todavía no existe, el botón **Ver** mostrará un aviso con la ruta exacta que falta. La aplicación no se rompe.
+se convierten automáticamente a `stretchSections` al cargar o importar. Las elongaciones existentes mantienen nombre, `libraryId` y tiempo configurado.
 
-> Usa únicamente GIFs propios o archivos que tengas permiso/licencia para publicar.
+Las secciones predeterminadas se reconstruyen desde la biblioteca actual. Si en una configuración futura existe una sección predeterminada antigua que ya no está en `stretch-library.js`, la aplicación la conserva como sección personalizada para evitar pérdida de datos.
 
-## Cómo agregar un nuevo ejercicio a la biblioteca
+## Actualización
 
-1. Copia uno de los objetos existentes en `exercise-library.js`.
-2. Cambia `id`, `name`, `category`, `gif` e `instructions`.
-3. Guarda el GIF con el mismo nombre indicado en `gif`.
-4. Sube ambos cambios a GitHub.
+Reemplaza juntos:
 
-El ejercicio aparecerá automáticamente en el selector.
+- `index.html`
+- `styles.css`
+- `app.js`
+- `exercise-library.js`
+- `warmup-library.js`
+- `stretch-library.js`
 
-## Datos y copias de seguridad
+Conserva tus GIF dentro de `assets/exercises/`, `assets/warmup/` y `assets/stretch/`.
 
-La rutina se guarda en el navegador mediante:
-
-```text
-localStorage
-```
-
-Los ejercicios de la rutina guardan un `libraryId`, pero **no duplican el GIF ni las instrucciones**. Esto mantiene pequeño el archivo JSON.
-
-Desde **Configuración** puedes:
-
-- Exportar la rutina a JSON.
-- Importar una copia JSON en otro dispositivo.
-- Borrar todos los datos locales.
-
-Las configuraciones creadas con la primera versión de la aplicación se importan como ejercicios personalizados para no perder información.
-
-## Publicar en GitHub Pages
-
-1. Crea un repositorio en GitHub.
-2. Sube todo el contenido de esta carpeta a la raíz del repositorio.
-3. En GitHub abre **Settings → Pages**.
-4. Selecciona **Deploy from a branch**.
-5. Selecciona la rama `main` y la carpeta `/ (root)`.
-6. Guarda los cambios.
-
-GitHub entregará una URL pública para la aplicación.
-
-## Descanso configurable y reordenamiento
-
-- El descanso predeterminado es 90 segundos y puede cambiarse desde Configuración. Este valor se aplica a ejercicios nuevos.
-- Cada ejercicio guarda su propio `restSeconds`, editable directamente en la columna Descanso.
-- Los ejercicios pueden reordenarse arrastrando el botón ☰ tanto con mouse como con pantalla táctil. Durante el gesto se muestra una vista flotante y un marcador “Suelta aquí”, evitando saltos de las filas. Con teclado, enfoca el botón ☰ y usa Flecha Arriba/Flecha Abajo.
-- El arrastre incluye auto-scroll al acercarse a los bordes superior o inferior de la pantalla y restaura el orden previo si el gesto se cancela.
-- El orden de los ejercicios y todos los valores de descanso se almacenan en `localStorage` y se incluyen en el JSON exportado.
-
-## Interfaz móvil tipo acordeón
-
-- En pantallas de hasta 760 px cada ejercicio aparece inicialmente como una tarjeta compacta con su nombre.
-- Al tocar el nombre se despliegan los controles del ejercicio. Solo se mantiene una tarjeta abierta a la vez.
-- Series, Repeticiones y Peso se muestran en una misma fila de tres columnas para aprovechar el ancho del teléfono.
-- Nombre y Descanso usan el ancho completo cuando la tarjeta está abierta.
-- El asa ☰ permanece visible en la tarjeta cerrada para permitir reordenar ejercicios sin abrirlos.
-- En computador se conserva una tabla horizontal real; no se transforma la tabla en tarjetas mediante CSS.
-- Este cambio es solo de interfaz: no modifica el formato del JSON ni la forma en que se guardan o exportan las rutinas.
-
-## Actualización v4
-
-Esta versión añade cuatro mejoras a la rutina:
-
-- En **Agregar ejercicio**, los ejercicios de biblioteca que ya aparecen en Jueves, Viernes, Sábado o Personalizado se muestran con un fondo verde suave. La detección usa `libraryId`, por lo que sigue funcionando aunque se edite el nombre visible del ejercicio.
-- Cada ejercicio incorpora **Placas**, un botón cíclico `0 → 1 → 2 → 0`.
-- Cada ejercicio incorpora **Subir peso**, un checkbox para recordar intentar un peso mayor la semana siguiente.
-- Al eliminar un ejercicio se solicita confirmación antes de borrarlo.
-
-Los campos `plates` e `increaseWeightNextWeek` forman parte de la base de datos local y del JSON exportado. Al importar configuraciones anteriores, se asigna automáticamente `plates: 0` e `increaseWeightNextWeek: false`.
-
-
-## Versión 5.1.0 — corrección de pestaña Personalizado
-
-Esta versión añade versionado explícito a los recursos estáticos (`styles.css`, `exercise-library.js` y `app.js`) mediante parámetros de versión en `index.html`. Esto evita que GitHub Pages o el navegador mezclen un HTML nuevo con JavaScript/CSS de una versión anterior almacenados en caché.
-
-La clave de `localStorage` permanece sin cambios (`gymRoutineDb_v1`), por lo que las rutinas existentes no se pierden. La estructura de drag & drop no fue modificada en esta corrección.
+Los recursos usan `?v=7.0.0` para evitar que GitHub Pages mezcle archivos de versiones anteriores desde caché.
